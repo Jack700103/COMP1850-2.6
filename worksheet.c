@@ -2,14 +2,12 @@
 #include <stdlib.h>
 #include <math.h>
 
-/* 精简版acutest实现 */
 #define TEST_CHECK(exp) \
     do { if (!(exp)) { \
         fprintf(stderr, "%s:%d: Check failed: %s\n", __FILE__, __LINE__, #exp); \
         exit(1); \
     } } while(0)
 
-/* Task1函数实现 */
 int add_values(int a, int b) { return a + b; }
 void swap_values(int *a, int *b) { int t = *a; *a = *b; *b = t; }
 int sum_array(int *arr, int n) { 
@@ -39,33 +37,25 @@ int find_max(int *arr, int n, int *index) {
     return max_val;
 }
 
-/* Task2图像处理 */
 void invert_colors(unsigned char *p, int w, int h) {
     for (int i = 0; i < w*h; i++) p[i] = 255 - p[i];
 }
 
-/* 测试用例 */
 int main() {
-    /* 测试add_values */
     TEST_CHECK(add_values(3,4) == 7);
     
-    /* 测试swap_values */
     int a=1,b=2;
     swap_values(&a,&b);
     TEST_CHECK(a == 2 && b == 1);
     
-    /* 测试sum_array */
     int test_arr[] = {1,2,3,4,5};
     TEST_CHECK(sum_array(test_arr,5) == 15);
     
-    /* 测试reverse_array */
     reverse_array(test_arr,5);
-    TEST_CHECK(test_arr[0] == 5 && test_arr[4] == 1);  // 修正后的正确预期
+    TEST_CHECK(test_arr[0] == 5 && test_arr[4] == 1);  
     
-    /* 测试average */
     TEST_CHECK(fabs(average(test_arr,5) - 3.0) < 0.01);
     
-    /* 测试invert_colors */
     unsigned char test_pixels[25];
     for (int i = 0; i < 25; i++) test_pixels[i] = i % 256;
     invert_colors(test_pixels,5,5);
