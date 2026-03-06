@@ -3,13 +3,17 @@
 #include <math.h>
 
 #define TEST_CHECK(exp) \
-    do { if (!(exp)) { \
+do { \
+    if (!(exp)) { \
         fprintf(stderr, "%s:%d: Check failed: %s\n", __FILE__, __LINE__, #exp); \
         exit(1); \
-    } } while(0)
+    } \
+} while(0)
 
 int add_values(int a, int b) { return a + b; }
+
 void swap_values(int *a, int *b) { int t = *a; *a = *b; *b = t; }
+
 int sum_array(int *arr, int n) { 
     int total = 0;
     for (int i = 0; i < n; i++) total += arr[i];
@@ -25,6 +29,7 @@ void reverse_array(int *arr, int n) {
 }
 
 double average(int *arr, int n) { return (double)sum_array(arr, n) / n; }
+
 int find_max(int *arr, int n, int *index) {
     *index = 0;
     int max_val = arr[0];
@@ -52,7 +57,7 @@ int main() {
     TEST_CHECK(sum_array(test_arr,5) == 15);
     
     reverse_array(test_arr,5);
-    TEST_CHECK(test_arr[0] == 5 && test_arr[4] == 1);  
+    TEST_CHECK(test_arr[0] == 5 && test_arr[4] == 1);
     
     TEST_CHECK(fabs(average(test_arr,5) - 3.0) < 0.01);
     
