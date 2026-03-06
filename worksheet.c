@@ -1,72 +1,249 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
+/**
+ * Week 6 Worksheet - Functions Practice
+ *
+ * This worksheet tests your understanding of:
+ * - Pass by value (returning results)
+ * - Pass by reference (modifying via pointers)
+ * - Arrays as function arguments
+ * - Output parameters
+ *
+ * Instructions:
+ * 1. Implement each function according to its documentation
+ * 2. Compile and run to test: gcc worksheet.c -o worksheet && ./worksheet
+ * 3. Acutest will show which tests pass/fail
+ *
+ * Run options:
+ *   ./worksheet              - Run all tests
+ *   ./worksheet --list       - List all tests
+ *   ./worksheet test_name    - Run specific test
+ */
 
-/* 自定义简单测试框架 */
-void test_result(const char* test_name, int passed) {
-    if (passed) {
-        printf("PASSED");
-    } else {
-        printf("FAILED");
-        exit(1);
+#include "acutest.h"
+
+/* ============================================================
+ * FUNCTION PROTOTYPES - Do not modify these
+ * ============================================================ */
+
+int add_values(int a, int b);
+void swap_values(int *a, int *b);
+int sum_array(int *arr, int n);
+void reverse_array(int *arr, int n);
+double average(int *arr, int n);
+int find_max(int *arr, int n, int *index);
+
+/* ============================================================
+ * STUDENT IMPLEMENTATIONS - Complete these functions
+ * ============================================================ */
+
+/**
+ * Function 1: add_values
+ */
+int add_values(int a, int b) {
+    return a + b;
+}
+
+/**
+ * Function 2: swap_values
+ */
+void swap_values(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+/**
+ * Function 3: sum_array
+ */
+int sum_array(int *arr, int n) {
+    int sum = 0;
+    for (int i = 0; i < n; i++) {
+        sum += arr[i];
     }
+    return sum;
 }
 
-int add_values(int a, int b) { return a + b; }
-void swap_values(int *a, int *b) { int t = *a; *a = *b; *b = t; }
-int sum_array(int *arr, int n) { 
-    int total = 0;
-    for (int i = 0; i < n; i++) total += arr[i];
-    return total;
-}
+/**
+ * Function 4: reverse_array
+ */
 void reverse_array(int *arr, int n) {
-    for (int i = 0; i < n/2; i++) {
-        int temp = arr[i];
-        arr[i] = arr[n-1-i];
-        arr[n-1-i] = temp;
+    // Use two pointers from start and end, swapping until they meet in the middle.
+    for (int i = 0; i < n / 2; i++) {
+        swap_values(&arr[i], &arr[n - 1 - i]);
     }
 }
-double average(int *arr, int n) { return (double)sum_array(arr, n) / n; }
+
+/**
+ * Function 5: average
+ */
+double average(int *arr, int n) {
+    // Handle edge case to prevent division by zero, though tests likely won't trigger it.
+    if (n == 0) {
+        return 0.0;
+    }
+    // Cast the sum to double before division to avoid integer truncation.
+    return (double)sum_array(arr, n) / n;
+}
+
+/**
+ * Function 6: find_max
+ */
 int find_max(int *arr, int n, int *index) {
-    *index = 0;
-    int max_val = arr[0];
+    // The test cases assume n >= 1, but it's good practice to handle edge cases.
+    if (n <= 0) {
+        *index = -1;
+        return 0;
+    }
+
+    int max_value = arr[0];
+    int max_index = 0;
+
     for (int i = 1; i < n; i++) {
-        if (arr[i] > max_val) {
-            max_val = arr[i];
-            *index = i;
+        if (arr[i] > max_value) {
+            max_value = arr[i];
+            max_index = i;
         }
     }
-    return max_val;
-}
-void invert_colors(unsigned char *p, int w, int h) {
-    for (int i = 0; i < w*h; i++) p[i] = 255 - p[i];
+
+    *index = max_index; // Store the found index via the output parameter.
+    return max_value;   // Return the maximum value.
 }
 
-int main() {
-    /* 测试add_values */
-    test_result("add_values", add_values(3,4) == 7);
-    
-    /* 测试swap_values */
-    int a=1,b=2;
-    swap_values(&a,&b);
-    test_result("swap_values", a == 2 && b == 1);
-    
-    /* 测试sum_array */
-    int test_arr[] = {1,2,3,4,5};
-    test_result("sum_array", sum_array(test_arr,5) == 15);
-    
-    /* 测试reverse_array */
-    reverse_array(test_arr,5);
-    test_result("reverse_array", test_arr[0] == 5 && test_arr[4] == 1);
-    
-    /* 测试average */
-    test_result("average", fabs(average(test_arr,5) - 3.0) < 0.01);
-    
-    /* 测试invert_colors */
-    unsigned char test_pixels[25];
-    for(int i=0; i<25; i++) test_pixels[i] = i % 256;
-    invert_colors(test_pixels,5,5);
-    test_result("invert_colors", test_pixels[0] == 255);
-    
-    return 0;
+
+/* ============================================================
+ * UNIT TESTS - Using Acutest framework
+ * https://github.com/mity/acutest
+ * ============================================================ */
+
+void test_add_values(void) {
+  TEST_CHECK(add_values(3, 4) == 7);
+  TEST_MSG("Expected add_values(3, 4) = 7");
+
+  TEST_CHECK(add_values(0, 0) == 0);
+  TEST_MSG("Expected add_values(0, 0) = 0");
+
+  TEST_CHECK(add_values(-5, 5) == 0);
+  TEST_MSG("Expected add_values(-5, 5) = 0");
+
+  TEST_CHECK(add_values(-3, -7) == -10);
+  TEST_MSG("Expected add_values(-3, -7) = -10");
 }
+
+void test_swap_values(void) {
+  int a, b;
+
+  a = 5;
+  b = 10;
+  swap_values(&a, &b);
+  TEST_CHECK(a == 10 && b == 5);
+  TEST_MSG("After swap_values(&5, &10): expected a=10, b=5, got a=%d, b=%d", a,
+           b);
+
+  a = -1;
+  b = 1;
+  swap_values(&a, &b);
+  TEST_CHECK(a == 1 && b == -1);
+  TEST_MSG("After swap_values(&-1, &1): expected a=1, b=-1, got a=%d, b=%d", a,
+           b);
+
+  a = 0;
+  b = 100;
+  swap_values(&a, &b);
+  TEST_CHECK(a == 100 && b == 0);
+  TEST_MSG("After swap_values(&0, &100): expected a=100, b=0, got a=%d, b=%d",
+           a, b);
+}
+
+void test_sum_array(void) {
+  int arr1[] = {1, 2, 3, 4, 5};
+  TEST_CHECK(sum_array(arr1, 5) == 15);
+  TEST_MSG("Expected sum_array([1,2,3,4,5], 5) = 15");
+
+  int arr2[] = {10};
+  TEST_CHECK(sum_array(arr2, 1) == 10);
+  TEST_MSG("Expected sum_array([10], 1) = 10");
+
+  int arr3[] = {-1, -2, -3};
+  TEST_CHECK(sum_array(arr3, 3) == -6);
+  TEST_MSG("Expected sum_array([-1,-2,-3], 3) = -6");
+
+  int arr4[] = {0, 0, 0, 0};
+  TEST_CHECK(sum_array(arr4, 4) == 0);
+  TEST_MSG("Expected sum_array([0,0,0,0], 4) = 0");
+}
+
+void test_reverse_array(void) {
+  int arr1[] = {1, 2, 3, 4, 5};
+  int exp1[] = {5, 4, 3, 2, 1};
+  reverse_array(arr1, 5);
+  int ok = 1;
+  for (int i = 0; i < 5; ++i) {
+    if (arr1[i] != exp1[i])
+      ok = 0;
+  }
+  TEST_CHECK(ok);
+  TEST_MSG("Expected reverse_array([1,2,3,4,5]) = [5,4,3,2,1]");
+
+  int arr2[] = {1, 2};
+  reverse_array(arr2, 2);
+  TEST_CHECK(arr2[0] == 2 && arr2[1] == 1);
+  TEST_MSG("Expected reverse_array([1,2]) = [2,1]");
+
+  int arr3[] = {42};
+  reverse_array(arr3, 1);
+  TEST_CHECK(arr3[0] == 42);
+  TEST_MSG("Expected reverse_array([42]) = [42] (single element unchanged)");
+}
+
+void test_average(void) {
+  int arr1[] = {1, 2, 3, 4, 5};
+  double avg1 = average(arr1, 5);
+  TEST_CHECK(avg1 >= 2.99 && avg1 <= 3.01);
+  TEST_MSG("Expected average([1,2,3,4,5]) = 3.0, got %f", avg1);
+
+  int arr2[] = {1, 2};
+  double avg2 = average(arr2, 2);
+  TEST_CHECK(avg2 >= 1.49 && avg2 <= 1.51);
+  TEST_MSG("Expected average([1,2]) = 1.5, got %f", avg2);
+
+  int arr3[] = {10, 20, 30};
+  double avg3 = average(arr3, 3);
+  TEST_CHECK(avg3 >= 19.99 && avg3 <= 20.01);
+  TEST_MSG("Expected average([10,20,30]) = 20.0, got %f", avg3);
+}
+
+void test_find_max(void) {
+  int arr1[] = {3, 7, 2, 9, 4};
+  int idx1;
+  int max1 = find_max(arr1, 5, &idx1);
+  TEST_CHECK(max1 == 9 && idx1 == 3);
+  TEST_MSG("Expected find_max([3,7,2,9,4]) = 9 at index 3, got %d at %d", max1,
+           idx1);
+
+  int arr2[] = {100};
+  int idx2;
+  int max2 = find_max(arr2, 1, &idx2);
+  TEST_CHECK(max2 == 100 && idx2 == 0);
+  TEST_MSG("Expected find_max([100]) = 100 at index 0, got %d at %d", max2,
+           idx2);
+
+  int arr3[] = {-5, -2, -8, -1};
+  int idx3;
+  int max3 = find_max(arr3, 4, &idx3);
+  TEST_CHECK(max3 == -1 && idx3 == 3);
+  TEST_MSG("Expected find_max([-5,-2,-8,-1]) = -1 at index 3, got %d at %d",
+           max3, idx3);
+}
+
+/* ============================================================
+ * TEST LIST - Acutest discovers tests from this list
+ * ============================================================ */
+
+TEST_LIST = {
+    {"add_values", test_add_values},
+    {"swap_values", test_swap_values},
+    {"sum_array", test_sum_array},
+    {"reverse_array", test_reverse_array},
+    {"average", test_average},
+    {"find_max", test_find_max},
+    {NULL, NULL} /* End of list */
+};
