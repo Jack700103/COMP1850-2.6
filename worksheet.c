@@ -1,28 +1,4 @@
-/**
- * Week 6 Worksheet - Functions Practice
- *
- * This worksheet tests your understanding of:
- * - Pass by value (returning results)
- * - Pass by reference (modifying via pointers)
- * - Arrays as function arguments
- * - Output parameters
- *
- * Instructions:
- * 1. Implement each function according to its documentation
- * 2. Compile and run to test: gcc worksheet.c -o worksheet && ./worksheet
- * 3. Acutest will show which tests pass/fail
- *
- * Run options:
- *   ./worksheet              - Run all tests
- *   ./worksheet --list       - List all tests
- *   ./worksheet test_name    - Run specific test
- */
-
 #include "acutest.h"
-
-/* ============================================================
- * FUNCTION PROTOTYPES - Do not modify these
- * ============================================================ */
 
 int add_values(int a, int b);
 void swap_values(int *a, int *b);
@@ -31,29 +7,16 @@ void reverse_array(int *arr, int n);
 double average(int *arr, int n);
 int find_max(int *arr, int n, int *index);
 
-/* ============================================================
- * STUDENT IMPLEMENTATIONS - Complete these functions
- * ============================================================ */
-
-/**
- * Function 1: add_values
- */
 int add_values(int a, int b) {
     return a + b;
 }
 
-/**
- * Function 2: swap_values
- */
 void swap_values(int *a, int *b) {
     int temp = *a;
     *a = *b;
     *b = temp;
 }
 
-/**
- * Function 3: sum_array
- */
 int sum_array(int *arr, int n) {
     int sum = 0;
     for (int i = 0; i < n; i++) {
@@ -62,9 +25,6 @@ int sum_array(int *arr, int n) {
     return sum;
 }
 
-/**
- * Function 4: reverse_array
- */
 void reverse_array(int *arr, int n) {
     // Use two pointers from start and end, swapping until they meet in the middle.
     for (int i = 0; i < n / 2; i++) {
@@ -72,23 +32,14 @@ void reverse_array(int *arr, int n) {
     }
 }
 
-/**
- * Function 5: average
- */
 double average(int *arr, int n) {
-    // Handle edge case to prevent division by zero, though tests likely won't trigger it.
     if (n == 0) {
         return 0.0;
     }
-    // Cast the sum to double before division to avoid integer truncation.
     return (double)sum_array(arr, n) / n;
 }
 
-/**
- * Function 6: find_max
- */
 int find_max(int *arr, int n, int *index) {
-    // The test cases assume n >= 1, but it's good practice to handle edge cases.
     if (n <= 0) {
         *index = -1;
         return 0;
@@ -104,15 +55,9 @@ int find_max(int *arr, int n, int *index) {
         }
     }
 
-    *index = max_index; // Store the found index via the output parameter.
-    return max_value;   // Return the maximum value.
+    *index = max_index; 
+    return max_value;   
 }
-
-
-/* ============================================================
- * UNIT TESTS - Using Acutest framework
- * https://github.com/mity/acutest
- * ============================================================ */
 
 void test_add_values(void) {
   TEST_CHECK(add_values(3, 4) == 7);
@@ -233,10 +178,6 @@ void test_find_max(void) {
   TEST_MSG("Expected find_max([-5,-2,-8,-1]) = -1 at index 3, got %d at %d",
            max3, idx3);
 }
-
-/* ============================================================
- * TEST LIST - Acutest discovers tests from this list
- * ============================================================ */
 
 TEST_LIST = {
     {"add_values", test_add_values},
