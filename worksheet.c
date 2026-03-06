@@ -1,72 +1,76 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
+/* ============================================================
+ * STUDENT IMPLEMENTATIONS - Complete these functions
+ * ============================================================ */
 
-// 自定义简单测试框架
-void test_result(const char* test_name, int passed) {
-    if (passed) {
-        printf("PASSED\n");
-    } else {
-        printf("FAILED\n");
-        exit(1);
+/**
+ * Function 1: add_values
+ */
+int add_values(int a, int b) {
+    return a + b;
+}
+
+/**
+ * Function 2: swap_values
+ */
+void swap_values(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+/**
+ * Function 3: sum_array
+ */
+int sum_array(int *arr, int n) {
+    int sum = 0;
+    for (int i = 0; i < n; i++) {
+        sum += arr[i];
     }
+    return sum;
 }
 
-int add_values(int a, int b) { return a + b; }
-void swap_values(int *a, int *b) { int t = *a; *a = *b; *b = t; }
-int sum_array(int *arr, int n) { 
-    int total = 0;
-    for (int i = 0; i < n; i++) total += arr[i];
-    return total;
-}
+/**
+ * Function 4: reverse_array
+ */
 void reverse_array(int *arr, int n) {
-    for (int i = 0; i < n/2; i++) {
-        int temp = arr[i];
-        arr[i] = arr[n-1-i];
-        arr[n-1-i] = temp;
+    // Use two pointers from start and end, swapping until they meet in the middle.
+    for (int i = 0; i < n / 2; i++) {
+        swap_values(&arr[i], &arr[n - 1 - i]);
     }
 }
-double average(int *arr, int n) { return (double)sum_array(arr, n) / n; }
+
+/**
+ * Function 5: average
+ */
+double average(int *arr, int n) {
+    // Handle edge case to prevent division by zero, though tests likely won't trigger it.
+    if (n == 0) {
+        return 0.0;
+    }
+    // Cast the sum to double before division to avoid integer truncation.
+    return (double)sum_array(arr, n) / n;
+}
+
+/**
+ * Function 6: find_max
+ */
 int find_max(int *arr, int n, int *index) {
-    *index = 0;
-    int max_val = arr[0];
+    // The test cases assume n >= 1, but it's good practice to handle edge cases.
+    if (n <= 0) {
+        *index = -1;
+        return 0;
+    }
+
+    int max_value = arr[0];
+    int max_index = 0;
+
     for (int i = 1; i < n; i++) {
-        if (arr[i] > max_val) {
-            max_val = arr[i];
-            *index = i;
+        if (arr[i] > max_value) {
+            max_value = arr[i];
+            max_index = i;
         }
     }
-    return max_val;
-}
-void invert_colors(unsigned char *p, int w, int h) {
-    for (int i = 0; i < w*h; i++) p[i] = 255 - p[i];
-}
 
-int main() {
-    // 测试add_values
-    test_result("add_values", add_values(3,4) == 7);
-    
-    // 测试swap_values
-    int a=1,b=2;
-    swap_values(&a,&b);
-    test_result("swap_values", a == 2 && b == 1);
-    
-    // 测试sum_array
-    int test_arr[] = {1,2,3,4,5};
-    test_result("sum_array", sum_array(test_arr,5) == 15);
-    
-    // 测试reverse_array
-    reverse_array(test_arr,5);
-    test_result("reverse_array", test_arr[0] == 5 && test_arr[4] == 1);
-    
-    // 测试average
-    test_result("average", fabs(average(test_arr,5) - 3.0) < 0.01);
-    
-    // 测试invert_colors
-    unsigned char test_pixels[25];
-    for(int i=0; i<25; i++) test_pixels[i] = i % 256;
-    invert_colors(test_pixels,5,5);
-    test_result("invert_colors", test_pixels[0] == 255);
-    
-    return 0;
+    *index = max_index; // Store the found index via the output parameter.
+    return max_value;   // Return the maximum value.
 }
